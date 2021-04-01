@@ -1,0 +1,14 @@
+# Auto startup
+
+# Step1 - Create this file if not exist exactly
+/home/pi/.config/lxsession/LXDE-pi/autostart
+
+# Step2 - Edit this file
+sudo nano /home/pi/.config/lxsession/LXDE-pi/autostart
+
+# Step3 - Add this to auto startup brower automatically when pi startup finish
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+@/usr/bin/chromium-browser https://www.codemobiles.com
+
