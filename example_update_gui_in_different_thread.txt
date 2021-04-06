@@ -1,0 +1,42 @@
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include <functional>
+#include <QTimer>
+
+void dispatchToMainThread(std::function<void()> callback)
+{
+    // any thread
+    QTimer* timer = new QTimer();
+    timer->moveToThread(qApp->thread());
+    timer->setSingleShot(true);
+    QObject::connect(timer, &QTimer::timeout, [=]()
+    {
+        // main thread
+        callback();
+        timer->deleteLater();
+    });
+    QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 0));
+}
+
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+
+
+    dispatchToMainThread( [this]{
+        this->updateFakeGUI();
+    });
+
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::updateFakeGUI()
+{
+    qDebug("hey");
+}
